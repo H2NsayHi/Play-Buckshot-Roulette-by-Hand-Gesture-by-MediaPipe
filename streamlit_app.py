@@ -606,105 +606,105 @@ class Player():
         self.items = temp
         talk_holder.write(f"[{name}] USED: {item}")
         time.sleep(0)
-        match item:
-            case 'mat/saw.jpg':
-                talk_holder.write("Let's cuff you off")
-                gun.doubleDamage()
-                playersaw_vid = cv.VideoCapture("mat/playersaw.mp4")
-                playersaw_place = st.empty()
+   
+        if item == 'mat/saw.jpg':
+            talk_holder.write("Let's cuff you off")
+            gun.doubleDamage()
+            playersaw_vid = cv.VideoCapture("mat/playersaw.mp4")
+            playersaw_place = st.empty()
+
+            while True:
+                ret, frame = playersaw_vid.read()
+                if not ret:
+                    break
+                screen_holder.image(frame, channels="BGR")
+            result_holder.write("Shotgun now does 2 damage.")
+
+        elif item == 'mat/glass.jpg':
+
+            talk_holder.write("Shhhh~~~.. The next round is..")
+            time.sleep(1)
+            if gun.rounds[-1]:
+                playerglass_true_vid = cv.VideoCapture("mat/playerglass_true.mp4")
+                playerglass_true_place = st.empty()
 
                 while True:
-                    ret, frame = playersaw_vid.read()
+                    ret, frame = playerglass_true_vid.read()
                     if not ret:
                         break
                     screen_holder.image(frame, channels="BGR")
-                result_holder.write("Shotgun now does 2 damage.")
-
-            case 'mat/glass.jpg':
-    
-                talk_holder.write("Shhhh~~~.. The next round is..")
-                time.sleep(1)
-                if gun.rounds[-1]:
-                    playerglass_true_vid = cv.VideoCapture("mat/playerglass_true.mp4")
-                    playerglass_true_place = st.empty()
-
-                    while True:
-                        ret, frame = playerglass_true_vid.read()
-                        if not ret:
-                            break
-                        screen_holder.image(frame, channels="BGR")
-                else:
-                    playerglass_false_vid = cv.VideoCapture("mat/playerglass_false.mp4")
-                    playerglass_false_place = st.empty()
-
-                    while True:
-                        ret, frame = playerglass_false_vid.read()
-                        if not ret:
-                            break
-                        screen_holder.image(frame, channels="BGR")
-
-                result_holder.write(["blank.", "LIVE."][gun.rounds[-1]])
-                time.sleep(0)
-
-            case 'mat/handcuff.jpg':
-                if not effector: return False
-
-                talk_holder.write("Look cuff you off")
-                effector.missTurns(1)
-                playerhandcuff_ai_vid = cv.VideoCapture("mat/playerhandcuff_ai.mp4")
-                playerhandcuff_ai_place = st.empty()
+            else:
+                playerglass_false_vid = cv.VideoCapture("mat/playerglass_false.mp4")
+                playerglass_false_place = st.empty()
 
                 while True:
-                    ret, frame = playerhandcuff_ai_vid.read()
+                    ret, frame = playerglass_false_vid.read()
                     if not ret:
                         break
                     screen_holder.image(frame, channels="BGR")
-                result_holder.write("Dealer will now miss a turn.")
-            
-            case 'mat/beer.jpg':
-                talk_holder.write("Shotgun has been racked. Round was.....")
-                r = gun.pickRound()
-                time.sleep(1)
-                if r:
-                    playerbeer_true_vid = cv.VideoCapture("mat/playerbeer_true.mp4")
-                    playerbeer_true_place = st.empty()
 
-                    while True:
-                        ret, frame = playerbeer_true_vid.read()
-                        if not ret:
-                            break
-                        screen_holder.image(frame, channels="BGR")
-                else:
-                    playerbeer_false_vid = cv.VideoCapture("mat/playerbeer_false.mp4")
-                    playerbeer_false_place = st.empty()
+            result_holder.write(["blank.", "LIVE."][gun.rounds[-1]])
+            time.sleep(0)
 
-                    while True:
-                        ret, frame = playerbeer_false_vid.read()
-                        if not ret:
-                            break
-                        screen_holder.image(frame, channels="BGR")
-                result_holder.write(["blank.","LIVE."][r])
+        elif item == 'mat/handcuff.jpg':
+            if not effector: return False
 
-            case 'mat/cigarette.jpg':
-                self.addHealth()
-                user_health_holder.write(f"Your HP: {self.health}")
-                talk_holder.write("So satisfying...")
-                playercigarette_vid = cv.VideoCapture("mat/playercigarette.mp4")
-                playercigarette_place = st.empty()
+            talk_holder.write("Look cuff you off")
+            effector.missTurns(1)
+            playerhandcuff_ai_vid = cv.VideoCapture("mat/playerhandcuff_ai.mp4")
+            playerhandcuff_ai_place = st.empty()
+
+            while True:
+                ret, frame = playerhandcuff_ai_vid.read()
+                if not ret:
+                    break
+                screen_holder.image(frame, channels="BGR")
+            result_holder.write("Dealer will now miss a turn.")
+        
+        elif item == 'mat/beer.jpg':
+            talk_holder.write("Shotgun has been racked. Round was.....")
+            r = gun.pickRound()
+            time.sleep(1)
+            if r:
+                playerbeer_true_vid = cv.VideoCapture("mat/playerbeer_true.mp4")
+                playerbeer_true_place = st.empty()
 
                 while True:
-                    ret, frame = playercigarette_vid.read()
+                    ret, frame = playerbeer_true_vid.read()
                     if not ret:
                         break
                     screen_holder.image(frame, channels="BGR")
-                result_holder.write(self.health)
+            else:
+                playerbeer_false_vid = cv.VideoCapture("mat/playerbeer_false.mp4")
+                playerbeer_false_place = st.empty()
 
-            case _:
-                talk_holder.write("uhm....")
-                time.sleep(0)
-                screen_holder.write("Game does not recognise the item.")
-                result_holder.write("Try again")
-                return False
+                while True:
+                    ret, frame = playerbeer_false_vid.read()
+                    if not ret:
+                        break
+                    screen_holder.image(frame, channels="BGR")
+            result_holder.write(["blank.","LIVE."][r])
+
+        elif item == 'mat/cigarette.jpg':
+            self.addHealth()
+            user_health_holder.write(f"Your HP: {self.health}")
+            talk_holder.write("So satisfying...")
+            playercigarette_vid = cv.VideoCapture("mat/playercigarette.mp4")
+            playercigarette_place = st.empty()
+
+            while True:
+                ret, frame = playercigarette_vid.read()
+                if not ret:
+                    break
+                screen_holder.image(frame, channels="BGR")
+            result_holder.write(self.health)
+
+        else:
+            talk_holder.write("uhm....")
+            time.sleep(0)
+            screen_holder.write("Game does not recognise the item.")
+            result_holder.write("Try again")
+            return False
         time.sleep(0)
         return True
     
@@ -725,90 +725,90 @@ class AI(Player):
         talk_holder.write(f"[DEALER] used {item}")
         time.sleep(0)
 
-        match item:
-            case 'mat/handcuff.jpg':
-                talk_holder.write("Locked....")
-                effector.missTurns()
-                aihandcuff_player_vid = cv.VideoCapture("mat/aihandcuff_player.mp4")
-                aihandcuff_player_place = st.empty()
+
+        if item == 'mat/handcuff.jpg':
+            talk_holder.write("Locked....")
+            effector.missTurns()
+            aihandcuff_player_vid = cv.VideoCapture("mat/aihandcuff_player.mp4")
+            aihandcuff_player_place = st.empty()
+
+            while True:
+                ret, frame = aihandcuff_player_vid.read()
+                if not ret:
+                    break
+                screen_holder.image(frame, channels="BGR")
+            result_holder.write("[DEALER] cuffed you.")
+        elif item ==  'mat/saw.jpg':
+            gun.doubleDamage()
+            time.sleep(0)
+            talk_holder.write("Double it up ~~")
+            aisaw_vid = cv.VideoCapture("mat/aisaw.mp4")
+            aisaw_place = st.empty()
+
+            while True:
+                ret, frame = aisaw_vid.read()
+                if not ret:
+                    break
+                screen_holder.image(frame, channels="BGR")
+            result_holder.write("Shotgun now does 2 damage.")
+        elif item ==  'mat/cigarette.jpg':
+            self.addHealth()
+            dealer_health_holder.write(f"Dealer HP: {self.health}")
+            time.sleep(0)
+            talk_holder.write("Ahhhh ~~~")
+            aicigarette_vid = cv.VideoCapture("mat/aicigarette.mp4")
+            aicigarette_place = st.empty()
+
+            while True:
+                ret, frame = aicigarette_vid.read()
+                if not ret:
+                    break
+                screen_holder.image(frame, channels="BGR")
+            result_holder.write(f"[DEALER] now has {self.health} lives.")
+        elif item ==  'mat/beer.jpg':
+            r = gun.pickRound()
+            time.sleep(0)
+            talk_holder.write("Gun has been racked. THE ROUND IS..")
+            time.sleep(1)
+            if r:
+                aibeer_true_vid = cv.VideoCapture("mat/aibeer_true.mp4")
+                aibeer_true_place = st.empty()
 
                 while True:
-                    ret, frame = aihandcuff_player_vid.read()
+                    ret, frame = aibeer_true_vid.read()
                     if not ret:
                         break
                     screen_holder.image(frame, channels="BGR")
-                result_holder.write("[DEALER] cuffed you.")
-            case 'mat/saw.jpg':
-                gun.doubleDamage()
-                time.sleep(0)
-                talk_holder.write("Double it up ~~")
-                aisaw_vid = cv.VideoCapture("mat/aisaw.mp4")
-                aisaw_place = st.empty()
+            else:
+                aibeer_false_vid = cv.VideoCapture("mat/aibeer_false.mp4")
+                aibeer_false_place = st.empty()
 
                 while True:
-                    ret, frame = aisaw_vid.read()
+                    ret, frame = aibeer_false_vid.read()
                     if not ret:
                         break
                     screen_holder.image(frame, channels="BGR")
-                result_holder.write("Shotgun now does 2 damage.")
-            case 'mat/cigarette.jpg':
-                self.addHealth()
-                dealer_health_holder.write(f"Dealer HP: {self.health}")
-                time.sleep(0)
-                talk_holder.write("Ahhhh ~~~")
-                aicigarette_vid = cv.VideoCapture("mat/aicigarette.mp4")
-                aicigarette_place = st.empty()
+            result_holder.write(["blank.","LIVE."][r])
+        elif item == 'mat/glass.jpg':
+            r = gun.rounds[-1]
+            talk_holder.write("[DEALER] has inspected the gun 🔍...")
+            aiglass_vid = cv.VideoCapture("mat/aiglass.mp4")
+            aiglass_place = st.empty()
 
-                while True:
-                    ret, frame = aicigarette_vid.read()
-                    if not ret:
-                        break
-                    screen_holder.image(frame, channels="BGR")
-                result_holder.write(f"[DEALER] now has {self.health} lives.")
-            case 'mat/beer.jpg':
-                r = gun.pickRound()
-                time.sleep(0)
-                talk_holder.write("Gun has been racked. THE ROUND IS..")
-                time.sleep(1)
-                if r:
-                    aibeer_true_vid = cv.VideoCapture("mat/aibeer_true.mp4")
-                    aibeer_true_place = st.empty()
-
-                    while True:
-                        ret, frame = aibeer_true_vid.read()
-                        if not ret:
-                            break
-                        screen_holder.image(frame, channels="BGR")
-                else:
-                    aibeer_false_vid = cv.VideoCapture("mat/aibeer_false.mp4")
-                    aibeer_false_place = st.empty()
-
-                    while True:
-                        ret, frame = aibeer_false_vid.read()
-                        if not ret:
-                            break
-                        screen_holder.image(frame, channels="BGR")
-                result_holder.write(["blank.","LIVE."][r])
-            case 'mat/glass.jpg':
-                r = gun.rounds[-1]
-                talk_holder.write("[DEALER] has inspected the gun 🔍...")
-                aiglass_vid = cv.VideoCapture("mat/aiglass.mp4")
-                aiglass_place = st.empty()
-
-                while True:
-                    ret, frame = aiglass_vid.read()
-                    if not ret:
-                        break
-                    screen_holder.image(frame, channels="BGR")
-                time.sleep(1)
-                result_holder.write(f"############################## {r}")
-                if r:
-                    self.useItem('mat/saw.jpg',gun=gun)
-                    self.shoot(gun,effector)
-                    return True
-                self.shoot(gun)
+            while True:
+                ret, frame = aiglass_vid.read()
+                if not ret:
+                    break
+                screen_holder.image(frame, channels="BGR")
+            time.sleep(1)
+            result_holder.write(f"############################## {r}")
+            if r:
+                self.useItem('mat/saw.jpg',gun=gun)
+                self.shoot(gun,effector)
                 return True
-                
+            self.shoot(gun)
+            return True
+            
         time.sleep(0)
         return True
 
