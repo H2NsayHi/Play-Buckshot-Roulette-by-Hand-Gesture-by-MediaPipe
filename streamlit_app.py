@@ -387,7 +387,7 @@ def camera():
 
 
     # Camera capture
-    cap = cv.VideoCapture(0)
+    cap = cv.VideoCapture(-1)
 
     # Create a placeholder for the video
     video_placeholder = st.sidebar.empty()
